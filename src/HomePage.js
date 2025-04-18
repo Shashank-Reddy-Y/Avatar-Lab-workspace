@@ -59,7 +59,7 @@ const HomePage = () => {
     </div>
     <div className="template">
         <audio controls>
-            <source src="/Users/apple/Documents/project_front/demo1_audio.wav" type="audio/wav" />
+            <source src="demo1_audio.wav" type="audio/wav" />
             Your browser does not support the audio element.
         </audio>
         <p>Voice A</p>
@@ -67,7 +67,7 @@ const HomePage = () => {
 
         <div className="template">
         <audio controls>
-            <source src="/Users/apple/Documents/project_front/demo2_audio.wav" type="audio/wav" />
+            <source src="demo2_audio.wav" type="audio/wav" />
             Your browser does not support the audio element.
         </audio>
         <p>Voice B</p>
