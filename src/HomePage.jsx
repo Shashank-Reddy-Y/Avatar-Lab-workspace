@@ -2,6 +2,7 @@
 "use client"; // ** REQUIRED for hooks like useState, useEffect, useRef **
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import './HomePage.css'; // Adjust path if needed, or move styles to globals.css
 
 // Custom Hook: Intersection Observer animation trigger
@@ -38,6 +39,8 @@ const useScrollAnimate = (ref, options = { threshold: 0.1, triggerOnce: true }) 
 
 // Page component
 export default function HomePage() {
+  const history = useHistory();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLightMode, setIsLightMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -52,6 +55,19 @@ export default function HomePage() {
         localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
     }
   }, [isLightMode, isClient]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    setIsAuthenticated(!!token); // Converts token to boolean
+  }, []);
+
+  const handleTryItNow = () => {
+    if (isAuthenticated) {
+      history.push('/templates/select'); // Logged in → go to templates
+    } else {
+      history.push('/login'); // Not logged in → go to login
+    }
+  };
 
   const toggleTheme = () => {
     setIsLightMode(prev => !prev);
@@ -93,14 +109,14 @@ export default function HomePage() {
       <header ref={heroRef} className={`hero ${heroInView ? 'in-view' : ''}`}> {/* Corrected */}
         <div className="hero-content">
           <h1 className="hero-title">
-            <span>🎤</span> <span>T</span><span>a</span><span>l</span><span>k</span><span>H</span><span>e</span><span>a</span><span>d</span> <span>A</span><span>I</span>
+            <span>T</span><span>a</span><span>l</span><span>k</span><span>H</span><span>e</span><span>a</span><span>d</span> <span>A</span><span>I</span>
           </h1>
           <p className="hero-subtitle">
             Create realistic talking head videos using just an image, audio, and your script.
           </p>
-          <a href="/templates" className="cta-button">
-            <span>Try It Now ✨</span>
-          </a>
+          <button className="cta-button" onClick={handleTryItNow}>
+          <span>Try It Now ✨</span>
+        </button>
         </div>
         <div ref={heroVisualRef} className={`hero-visual ${heroVisualInView ? 'in-view' : ''}`}> {/* Corrected (and used heroVisualInView) */}
           <img

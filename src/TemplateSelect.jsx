@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './TemplateSelect.css'; // Your existing CSS file
-import ParticleBackgroundSimple from './ParticleBackgroundSimple'; // Import the SIMPLER background component
+import ParticleBackgroundSimple from './FirstParticleBackgroundSimple'; // Import the SIMPLER background component
 
 const templates = [
   {

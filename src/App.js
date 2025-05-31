@@ -5,12 +5,16 @@ import HomePage from './HomePage';
 import TemplateSelect from './TemplateSelect';
 import EnterTranscript from './EnterTranscript';
 import VideoOutput from './VideoOutput';
+import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
 
 const App = () => {
   return (
     <Router>
       <Switch>
         <Route exact path="/" component={HomePage} />
+        <Route path="/login" component={LoginPage}/>
+        <Route path="/signup" component={SignupPage}/>
         <Route path="/templates" component={TemplateSelect} />
         <Route path="/enter-transcript" component={EnterTranscript} />
         <Route path="/video-output" component={VideoOutput} />
