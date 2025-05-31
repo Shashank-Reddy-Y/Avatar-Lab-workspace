@@ -52,4 +52,23 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.post('/validate-token', (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Token missing or malformed' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.status(200).json({ valid: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ valid: false, message: 'Invalid or expired token' });
+  }
+});
+
+
+
 module.exports = router;

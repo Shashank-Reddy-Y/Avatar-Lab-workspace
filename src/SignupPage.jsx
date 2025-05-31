@@ -111,7 +111,7 @@ const handleSubmit = async (e) => {
         password: formData.password,
       };
 
-      const response = await axios.post('http://localhost:5000/api/auth/signup', payload);
+      const response = await axios.post('http://localhost:5000/api/signup', payload);
 
       // On success, you might get a success message or user object
       alert('Signup successful! Redirecting to login...');

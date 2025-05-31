@@ -43,6 +43,7 @@ export default function HomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLightMode, setIsLightMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const logoutTimerRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -56,18 +57,91 @@ export default function HomePage() {
     }
   }, [isLightMode, isClient]);
 
-  useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    setIsAuthenticated(!!token); // Converts token to boolean
-  }, []);
+     // Decode JWT payload safely
+  const decodeJWT = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return null;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("userToken");
+    setIsAuthenticated(false);
+    if (logoutTimerRef.current) {
+      clearTimeout(logoutTimerRef.current);
+      logoutTimerRef.current = null;
+    }
+  };
+
+
+
+   useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+      logout();
+      return;
+    }
+
+    const payload = decodeJWT(token);
+    if (!payload || !payload.exp) {
+      logout();
+      return;
+    }
+
+    const expiryTimeMs = payload.exp * 1000;
+    const now = Date.now();
+
+    if (expiryTimeMs <= now) {
+      logout();
+      return;
+    }
+
+    // Set auto logout timer
+    const timeUntilExpiry = expiryTimeMs - now;
+    logoutTimerRef.current = setTimeout(() => {
+      logout();
+      alert("Session expired. Please log in again.");
+      history.push("/login");
+    }, timeUntilExpiry);
+
+    // Validate token with backend
+    fetch("http://localhost:5000/api/validate-token", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          logout();
+        }
+      })
+      .catch(() => {
+        logout();
+      });
+
+    return () => {
+      if (logoutTimerRef.current) {
+        clearTimeout(logoutTimerRef.current);
+        logoutTimerRef.current = null;
+      }
+    };
+  }, [history]);
+
+
 
   const handleTryItNow = () => {
     if (isAuthenticated) {
-      history.push('/templates/select'); // Logged in → go to templates
+      history.push("/templates/select");
     } else {
-      history.push('/login'); // Not logged in → go to login
+      history.push("/login");
     }
   };
+
 
   const toggleTheme = () => {
     setIsLightMode(prev => !prev);

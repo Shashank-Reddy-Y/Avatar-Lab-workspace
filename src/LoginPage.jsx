@@ -72,7 +72,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       // Replace with your actual API endpoint
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,12 +87,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log('Login successful:', data);
-        // Save token/session info if your backend returns it
-        // Example:
-        // localStorage.setItem('token', data.token);
-
-        // Redirect user to templates select page
-        localStorage.setItem('userToken', 'loginned-already');
+        localStorage.setItem('userToken', data.token);
         history.push('/templates/select');
       } else {
         // If login fails, show error message returned by backend or a generic one
