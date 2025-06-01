@@ -87,8 +87,9 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log('Login successful:', data);
-        localStorage.setItem('userToken', data.token);
-        history.push('/templates/select');
+        localStorage.setItem('userToken', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        history.push('/dashboard');
       } else {
         // If login fails, show error message returned by backend or a generic one
         setLoginError(data.message || 'Invalid email or password.');

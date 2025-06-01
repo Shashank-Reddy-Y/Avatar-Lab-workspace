@@ -136,7 +136,7 @@ export default function HomePage() {
 
   const handleTryItNow = () => {
     if (isAuthenticated) {
-      history.push("/templates/select");
+      history.push("/dashboard");
     } else {
       history.push("/login");
     }
